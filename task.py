@@ -52,8 +52,11 @@ class FileStream:
 	def open(self):
 		self.failable.mayBeFail(self.openSafe)
 	def openSafe(self):
-		self.file = open(self.fileName)
-		self.stream = iter([x for x in self.file.read().split()])
+		try:
+			self.file = open(self.fileName)
+			self.stream = iter([x for x in self.file.read().split()])
+		except PermissionError:
+			raise AccessDenied("file " + fileName)
 	def close(self):
 		if self.file:
 			self.file.close()
